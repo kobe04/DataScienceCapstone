@@ -1,0 +1,32 @@
+---
+title: "Starting up"
+author: "K. van Splunter"
+date: "1 april 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading the initial data
+
+```{r downloadData}
+# Create a directory for the data
+if(!file.exists("./Data")){
+    dir.create("./Data")
+}
+# Download the data
+URL <- "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
+if(!file.exists("./Data/SwiftkeyData.zip")){
+    download.file(URL, destfile = "./Data/SwiftkeyData.zip")
+}
+# Unzip the data
+if(!file.exists("./Data/final")){
+    unzip(zipfile = "./Data/SwiftkeyData.zip")
+}
+```
+
+
+
+
