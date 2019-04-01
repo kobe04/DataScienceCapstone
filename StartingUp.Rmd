@@ -23,7 +23,7 @@ if(!file.exists("./Data/SwiftkeyData.zip")){
 }
 # Unzip the data
 if(!file.exists("./Data/final")){
-    unzip(zipfile = "./Data/SwiftkeyData.zip")
+    unzip(zipfile = "./Data/SwiftkeyData.zip", exdir = "./Data")
 }
 ```
 
