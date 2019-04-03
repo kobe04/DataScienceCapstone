@@ -198,6 +198,9 @@ $(document).ready(function () {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
+<p>This report provides an introduction to the Capstone Project for the Data Science Specialization on <a href="https://www.coursera.org/specializations/jhu-data-science" title="Coursera">Coursera</a>. The overall goal of the project is to develop a word predictor. It will be deployed as a Shiny app and be accompanied by a Presentation that pitches the app. The project is done in partnership with <a href="https://www.microsoft.com/en-us/swiftkey?rtc=1&amp;activetab=pivot_1%3aprimaryr2" title="SwiftKey">SwiftKey</a>.</p>
+<p>The goal of this report is to provide some exploratory analysis of the data.</p>
+<p>To keep this report tidy and short, most of the code is not included. However, the code can easily be found and checked <a href="https://github.com/kobe04/DataScienceCapstone" title="here">here</a>!</p>
 </div>
 <div id="loading-the-initial-data" class="section level2">
 <h2>Loading the initial data</h2>
@@ -218,22 +221,30 @@ if(!file.exists(&quot;./Data/final&quot;)){
 dir(&quot;./Data/final/en_US&quot;)</code></pre>
 <pre><code>## [1] &quot;en_US.blogs.txt&quot;   &quot;en_US.news.txt&quot;    &quot;en_US.twitter.txt&quot;</code></pre>
 <pre class="r"><code># Calculate the size of the files
-sizeBlogs &lt;- file.size(&quot;./Data/final/en_US/en_US.blogs.txt&quot;)/(10^6)
-sizeNews &lt;- file.size(&quot;./Data/final/en_US/en_US.news.txt&quot;)/(10^6)
-sizeTwitter &lt;- file.size(&quot;./Data/final/en_US/en_US.twitter.txt&quot;)/(10^6)
+sizeBlogs &lt;- round(file.size(&quot;./Data/final/en_US/en_US.blogs.txt&quot;)/(10^6), 3)
+sizeNews &lt;- round(file.size(&quot;./Data/final/en_US/en_US.news.txt&quot;)/(10^6), 3)
+sizeTwitter &lt;- round(file.size(&quot;./Data/final/en_US/en_US.twitter.txt&quot;)/(10^6), 3)
 
-library(readr)</code></pre>
-<p>There are three files. They respectively hold texts about blogs, news, and tweets. The size of the files is quite big. The data of the blogs is 210.160014 MB. The news-data is 205.811889 MB. The twitter-data is 167.105338 MB. Because the files are this big, the files are sampled and a new (smaller) datafile is created.</p>
+library(readr); library(tm)</code></pre>
+<pre><code>## Loading required package: NLP</code></pre>
+<p>There are three files. They respectively hold texts about blogs, news, and tweets. The size of the files is quite big. The data of the blogs is 210.16 MB. The news-data is 205.812 MB. The twitter-data is 167.105 MB. Because the files are this big, the files are sampled and a new (smaller) datafile is created.</p>
 </div>
 <div id="creating-a-sample" class="section level2">
 <h2>Creating a sample</h2>
-<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 30% of the data files is included in the sample.</p>
+<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 5% of the data in the files is included in the sample. These are the first three entries in the sample.</p>
 <pre><code>## [1] &quot;Life is busy!&quot;                               
 ## [2] &quot;Acts 9:7-8&quot;                                  
 ## [3] &quot;How long did it take you to write your book?&quot;</code></pre>
 </div>
-<div id="section" class="section level2">
-<h2></h2>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<p>First, several characteristics of the original data and the sample are shown. These are the size, the length (how many entries), and the (estimated) total amount of words.</p>
+<pre><code>##   DataSource    Size  Length    Words
+## 1      Blogs 210.160  899288 38601602
+## 2       News 205.812 1010242 35624468
+## 3    Twitter 167.105 2360148 31105021
+## 4     Sample  29.027  213483  5246813</code></pre>
+<p>For further analysis, the sample is cleaned.</p>
 </div>
 
 

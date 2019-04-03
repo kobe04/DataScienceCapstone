@@ -8,16 +8,21 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 ## Introduction
 
+This report provides an introduction to the Capstone Project for the Data Science Specialization on [Coursera][1]. The overall goal of the project is to develop a word predictor. It will be deployed as a Shiny app and be accompanied by a Presentation that pitches the app. The project is done in partnership with [SwiftKey][2].
+
+The goal of this report is to provide some exploratory analysis of the data.
+
+To keep this report tidy and short, most of the code is not included. However, the code can easily be found and checked [here][3]!
 
 ## Loading the initial data
 
 This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once. Furthermore, the necessary packages are loaded.
 
-```{r downloadData}
+```{r downloadData, echo=TRUE}
 # Create a directory for the data
 if(!file.exists("./Data")){
     dir.create("./Data")
@@ -34,11 +39,11 @@ if(!file.exists("./Data/final")){
 dir("./Data/final/en_US")
 
 # Calculate the size of the files
-sizeBlogs <- file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6)
-sizeNews <- file.size("./Data/final/en_US/en_US.news.txt")/(10^6)
-sizeTwitter <- file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6)
+sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
+sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
+sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
 
-library(readr)
+library(readr); library(tm)
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -48,9 +53,9 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 ## Creating a sample
 
-To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 30% of the data files is included in the sample.
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 5% of the data in the files is included in the sample. These are the first three entries in the sample.
 
-```{r Sampling, cache=TRUE, echo = FALSE}
+```{r Sampling, cache=TRUE}
 # Set the seed
 
 set.seed(824039)
@@ -62,10 +67,43 @@ blogData <- readLines("./Data/final/en_US/en_US.blogs.txt", skipNul = T)
 newsData <- read_lines("./Data/final/en_US/en_US.news.txt", skip = 0)
 
 # Create the new file
-sampleData <- c(sample(blogData, round(length(blogData) * 0.3)),
-                sample(newsData, round(length(newsData) * 0.3)),
-                sample(twitterData, round(length(twitterData) * 0.3)))
+sampleData <- c(sample(blogData, round(length(blogData) * 0.05)),
+                sample(newsData, round(length(newsData) * 0.05)),
+                sample(twitterData, round(length(twitterData) * 0.05)))
 head(sampleData, 3)
+writeLines(sampleData, "./Data/sampleData.txt")
 ```
 
-##
+
+## Exploratory analysis
+
+First, several characteristics of the original data and the sample are shown. These are the size, the length (how many entries), and the (estimated) total amount of words.
+
+```{r DataCharacteristics, cache = TRUE}
+sizeSample <- round(file.size("./Data/sampleData.txt")/(10^6), 3)
+lengthBlog <- length(blogData)
+lengthNews <- length(newsData)
+lengthTwitter <- length(twitterData)
+lengthSample <- length(sampleData)
+blogWords <- sum(sapply(gregexpr("\\w+", blogData), length))
+newsWords <- sum(sapply(gregexpr("\\w+", newsData), length))
+twitterWords <- sum(sapply(gregexpr("\\w+", twitterData), length))
+sampleWords <- sum(sapply(gregexpr("\\w+", sampleData), length))
+filesOverview <- data.frame(DataSource = c("Blogs", "News", "Twitter", "Sample"),
+                            Size = c(sizeBlogs, sizeNews, sizeTwitter, sizeSample),
+                            Length = c(lengthBlog, lengthNews, lengthTwitter, lengthSample),
+                            Words = c(blogWords, newsWords, twitterWords, sampleWords))
+filesOverview
+```
+
+For further analysis, the sample is cleaned.
+```{r CleanSample}
+
+```
+
+
+
+
+[1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
+[2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
+[3]: https://github.com/kobe04/DataScienceCapstone "here"
