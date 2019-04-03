@@ -13,7 +13,7 @@ output:
 
 ## Loading the initial data
 
-This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once.
+This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once. Furthermore, the necessary packages are loaded.
 
 
 ```r
@@ -42,6 +42,8 @@ dir("./Data/final/en_US")
 sizeBlogs <- file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6)
 sizeNews <- file.size("./Data/final/en_US/en_US.news.txt")/(10^6)
 sizeTwitter <- file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6)
+
+library(readr)
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -51,9 +53,13 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 ## Creating a sample
 
-To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file.
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 30% of the data files is included in the sample.
 
-```r
-set.seed(824039)
+
 ```
+## [1] "Life is busy!"                               
+## [2] "Acts 9:7-8"                                  
+## [3] "How long did it take you to write your book?"
+```
+
 ##

@@ -201,7 +201,7 @@ $(document).ready(function () {
 </div>
 <div id="loading-the-initial-data" class="section level2">
 <h2>Loading the initial data</h2>
-<p>This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once.</p>
+<p>This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once. Furthermore, the necessary packages are loaded.</p>
 <pre class="r"><code># Create a directory for the data
 if(!file.exists(&quot;./Data&quot;)){
     dir.create(&quot;./Data&quot;)
@@ -220,13 +220,17 @@ dir(&quot;./Data/final/en_US&quot;)</code></pre>
 <pre class="r"><code># Calculate the size of the files
 sizeBlogs &lt;- file.size(&quot;./Data/final/en_US/en_US.blogs.txt&quot;)/(10^6)
 sizeNews &lt;- file.size(&quot;./Data/final/en_US/en_US.news.txt&quot;)/(10^6)
-sizeTwitter &lt;- file.size(&quot;./Data/final/en_US/en_US.twitter.txt&quot;)/(10^6)</code></pre>
+sizeTwitter &lt;- file.size(&quot;./Data/final/en_US/en_US.twitter.txt&quot;)/(10^6)
+
+library(readr)</code></pre>
 <p>There are three files. They respectively hold texts about blogs, news, and tweets. The size of the files is quite big. The data of the blogs is 210.160014 MB. The news-data is 205.811889 MB. The twitter-data is 167.105338 MB. Because the files are this big, the files are sampled and a new (smaller) datafile is created.</p>
 </div>
 <div id="creating-a-sample" class="section level2">
 <h2>Creating a sample</h2>
-<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file.</p>
-<pre class="r"><code>set.seed(824039)</code></pre>
+<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 30% of the data files is included in the sample.</p>
+<pre><code>## [1] &quot;Life is busy!&quot;                               
+## [2] &quot;Acts 9:7-8&quot;                                  
+## [3] &quot;How long did it take you to write your book?&quot;</code></pre>
 </div>
 <div id="section" class="section level2">
 <h2></h2>
