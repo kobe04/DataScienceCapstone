@@ -79,7 +79,7 @@ writeLines(sampleData, "./Data/sampleData.txt")
 
 First, several characteristics of the original data and the sample are shown. These are the size, the length (how many entries), and the (estimated) total amount of words.
 
-```{r DataCharacteristics, cache = TRUE}
+```{r DataCharacteristics, cache = TRUE, comment = ""}
 sizeSample <- round(file.size("./Data/sampleData.txt")/(10^6), 3)
 lengthBlog <- length(blogData)
 lengthNews <- length(newsData)
@@ -96,7 +96,7 @@ filesOverview <- data.frame(DataSource = c("Blogs", "News", "Twitter", "Sample")
 filesOverview
 ```
 
-For further analysis, the sample is cleaned.
+For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4].
 ```{r CleanSample}
 
 ```
@@ -107,3 +107,4 @@ For further analysis, the sample is cleaned.
 [1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
 [3]: https://github.com/kobe04/DataScienceCapstone "here"
+[4]: 

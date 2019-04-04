@@ -85,7 +85,7 @@ First, several characteristics of the original data and the sample are shown. Th
 ## 4     Sample  29.027  213483  5246813
 ```
 
-For further analysis, the sample is cleaned.
+For further analysis, the sample is cleaned. As the first three entries show, 
 
 
 
