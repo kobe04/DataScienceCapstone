@@ -225,13 +225,12 @@ sizeBlogs &lt;- round(file.size(&quot;./Data/final/en_US/en_US.blogs.txt&quot;)/
 sizeNews &lt;- round(file.size(&quot;./Data/final/en_US/en_US.news.txt&quot;)/(10^6), 3)
 sizeTwitter &lt;- round(file.size(&quot;./Data/final/en_US/en_US.twitter.txt&quot;)/(10^6), 3)
 
-library(readr); library(tm)</code></pre>
-<pre><code>Loading required package: NLP</code></pre>
+library(readr); suppressPackageStartupMessages(library(quanteda))</code></pre>
 <p>There are three files. They respectively hold texts about blogs, news, and tweets. The size of the files is quite big. The data of the blogs is 210.16 MB. The news-data is 205.812 MB. The twitter-data is 167.105 MB. Because the files are this big, the files are sampled and a new (smaller) datafile is created.</p>
 </div>
 <div id="creating-a-sample" class="section level2">
 <h2>Creating a sample</h2>
-<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 15% of the data in the files is included in the sample. These are the first three entries in the sample.</p>
+<p>To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 10% of the data in the files is included in the sample. These are the first three entries in the sample.</p>
 <pre><code>[1] &quot;Life is busy!&quot;                               
 [2] &quot;Acts 9:7-8&quot;                                  
 [3] &quot;How long did it take you to write your book?&quot;</code></pre>
@@ -244,7 +243,13 @@ library(readr); library(tm)</code></pre>
 2       News 205.812 1010242 35624468
 3    Twitter 167.105 2360148 31105021
 4     Sample  87.332  640451 15783340</code></pre>
-<p>For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en" title="available">available</a>, created by Shutterstock. All the necessary transformations are made with the tm-package. You can find more about this package <a href="https://www.rdocumentation.org/packages/tm/versions/0.7-6" title="here">here</a>. The list of stopwords is part of the tm-package.</p>
+<p>For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is <a href="https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en" title="available">available</a>, created by Shutterstock. All the necessary transformations are made with the quanteda-package. You can find more about this package <a href="https://quanteda.io/index.html" title="here">here</a>. The list of stopwords is part of the quanteda-package.</p>
+<p>To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created.</p>
+<pre><code>  will   said   just    one   like    can    get   time      s    new 
+ 31701  30379  30198  28623  27025  24608  22613  21439  20304  19325 
+   now   good    day   know people   love   back     go    see  first 
+ 17979  17730  16646  16425  15771  15751  14162  13926  13786  13555 </code></pre>
+<p>This shows the top-20 words in the sample data.</p>
 </div>
 
 

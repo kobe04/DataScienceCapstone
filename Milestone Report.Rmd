@@ -43,7 +43,7 @@ sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
 sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
 sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
 
-library(readr); library(tm)
+library(readr); suppressPackageStartupMessages(library(quanteda))
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -53,9 +53,9 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 ## Creating a sample
 
-To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 1% of the data in the files is included in the sample. These are the first three entries in the sample.
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 10% of the data in the files is included in the sample. These are the first three entries in the sample.
 
-```{r Sampling}
+```{r Sampling, cache = TRUE}
 # Set the seed
 set.seed(824039)
 
@@ -65,9 +65,9 @@ blogData <- readLines("./Data/final/en_US/en_US.blogs.txt", skipNul = T)
 newsData <- read_lines("./Data/final/en_US/en_US.news.txt", skip = 0)
 
 # Create the new file
-sampleData <- c(sample(blogData, round(length(blogData) * 0.01)),
-                sample(newsData, round(length(newsData) * 0.01)),
-                sample(twitterData, round(length(twitterData) * 0.01)))
+sampleData <- c(sample(blogData, round(length(blogData) * 0.1)),
+                sample(newsData, round(length(newsData) * 0.1)),
+                sample(twitterData, round(length(twitterData) * 0.1)))
 head(sampleData, 3)
 writeLines(sampleData, "./Data/sampleData.txt")
 ```
@@ -102,33 +102,24 @@ filesOverview
 ```
 
 For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
-All the necessary transformations are made with the tm-package. You can find more about this package [here][5]. The list of stopwords is part of the tm-package.
+All the necessary transformations are made with the quanteda-package. You can find more about this package [here][5]. The list of stopwords is part of the quanteda-package.
 
 ```{r CleanSample, cache = TRUE, warning=FALSE}
 # Read in profanity list
 profanityList <- read_lines("./Data/profanitylist.txt", skip = 0)
 
 # Create corpus of sample
-corpusDraft <- Corpus(VectorSource(sampleData))
-
-# Clean the corpus
-corpusDraft <- tm_map(corpusDraft, removePunctuation)
-extraPunctuation <- content_transformer(function(x, pattern) {return (gsub(pattern, " ", x))})
-corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€™")
-corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€\u009d")
-corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€œ")
-corpusDraft <- tm_map(corpusDraft, content_transformer(tolower))
-corpusDraft <- tm_map(corpusDraft, removeNumbers)
-corpusDraft <- tm_map(corpusDraft, removeWords, profanityList)
-corpusDraft <- tm_map(corpusDraft, removeWords, stopwords("english"))
-corpusDraft <- tm_map(corpusDraft, stripWhitespace)
+sampleCorpus <- corpus(sampleData)
 ```
 
-To provide some exploratory statistics of the sample data, a Document-Term Matrix is created.
-```{r DTM}
-
+To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created.
+```{r DFM}
+dFM <- dfm(sampleCorpus, remove = c(stopwords("english"), profanityList, "â"), remove_numbers = TRUE,
+           remove_punct = TRUE, remove_separators = TRUE)
+topfeatures(dFM, 20)
 ```
 
+This shows the top-20 words in the sample data.
 
 
 
@@ -136,4 +127,4 @@ To provide some exploratory statistics of the sample data, a Document-Term Matri
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
 [3]: https://github.com/kobe04/DataScienceCapstone "here"
 [4]: https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en "available"
-[5]: https://www.rdocumentation.org/packages/tm/versions/0.7-6 "here"
+[5]: https://quanteda.io/index.html "here"

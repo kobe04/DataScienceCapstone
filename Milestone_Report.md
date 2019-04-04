@@ -48,11 +48,7 @@ sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
 sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
 sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
 
-library(readr); library(tm)
-```
-
-```
-Loading required package: NLP
+library(readr); suppressPackageStartupMessages(library(quanteda))
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -62,7 +58,7 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 ## Creating a sample
 
-To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 15% of the data in the files is included in the sample. These are the first three entries in the sample.
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 10% of the data in the files is included in the sample. These are the first three entries in the sample.
 
 
 ```
@@ -86,12 +82,20 @@ First, several characteristics of the original data and the sample are shown. Th
 ```
 
 For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
-All the necessary transformations are made with the tm-package. You can find more about this package [here][5]. The list of stopwords is part of the tm-package.
+All the necessary transformations are made with the quanteda-package. You can find more about this package [here][5]. The list of stopwords is part of the quanteda-package.
 
 
 
+To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created.
 
+```
+  will   said   just    one   like    can    get   time      s    new 
+ 31701  30379  30198  28623  27025  24608  22613  21439  20304  19325 
+   now   good    day   know people   love   back     go    see  first 
+ 17979  17730  16646  16425  15771  15751  14162  13926  13786  13555 
+```
 
+This shows the top-20 words in the sample data.
 
 
 
@@ -99,4 +103,4 @@ All the necessary transformations are made with the tm-package. You can find mor
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
 [3]: https://github.com/kobe04/DataScienceCapstone "here"
 [4]: https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en "available"
-[5]: https://www.rdocumentation.org/packages/tm/versions/0.7-6 "here"
+[5]: https://quanteda.io/index.html "here"
