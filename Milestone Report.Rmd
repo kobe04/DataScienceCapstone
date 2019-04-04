@@ -53,9 +53,9 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 ## Creating a sample
 
-To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 15% of the data in the files is included in the sample. These are the first three entries in the sample.
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 1% of the data in the files is included in the sample. These are the first three entries in the sample.
 
-```{r Sampling, cache = TRUE}
+```{r Sampling}
 # Set the seed
 set.seed(824039)
 
@@ -65,9 +65,9 @@ blogData <- readLines("./Data/final/en_US/en_US.blogs.txt", skipNul = T)
 newsData <- read_lines("./Data/final/en_US/en_US.news.txt", skip = 0)
 
 # Create the new file
-sampleData <- c(sample(blogData, round(length(blogData) * 0.15)),
-                sample(newsData, round(length(newsData) * 0.15)),
-                sample(twitterData, round(length(twitterData) * 0.15)))
+sampleData <- c(sample(blogData, round(length(blogData) * 0.01)),
+                sample(newsData, round(length(newsData) * 0.01)),
+                sample(twitterData, round(length(twitterData) * 0.01)))
 head(sampleData, 3)
 writeLines(sampleData, "./Data/sampleData.txt")
 ```
@@ -119,15 +119,15 @@ corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€\u009d")
 corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€œ")
 corpusDraft <- tm_map(corpusDraft, content_transformer(tolower))
 corpusDraft <- tm_map(corpusDraft, removeNumbers)
-corpusDraft <- tm_map(corpusDraft, removeWords, stopwords("english"))
 corpusDraft <- tm_map(corpusDraft, removeWords, profanityList)
+corpusDraft <- tm_map(corpusDraft, removeWords, stopwords("english"))
 corpusDraft <- tm_map(corpusDraft, stripWhitespace)
-
-# Save the Corpus
-saveRDS(corpusDraft, file = "./Data/corpusClean.RDS")
 ```
 
+To provide some exploratory statistics of the sample data, a Document-Term Matrix is created.
+```{r DTM}
 
+```
 
 
 
