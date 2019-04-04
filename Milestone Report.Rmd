@@ -1,0 +1,139 @@
+---
+title: "Preliminary Milestone Report"
+author: "K. van Splunter"
+date: "April 2019"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = "")
+```
+## Introduction
+
+This report provides an introduction to the Capstone Project for the Data Science Specialization on [Coursera][1]. The overall goal of the project is to develop a word predictor. It will be deployed as a Shiny app and be accompanied by a Presentation that pitches the app. The project is done in partnership with [SwiftKey][2].
+
+The goal of this report is to provide some exploratory analysis of the data.
+
+To keep this report tidy and short, most of the code is not included. However, the code can easily be found and checked [here][3]!
+
+## Loading the initial data
+
+This part of the code downloads the data to the computer and unzips it. It checks if the data is already downloaded and unzipped. If the names of the original files are not changed, this process will only download the files once. Furthermore, the necessary packages are loaded.
+
+```{r downloadData, echo = TRUE}
+# Create a directory for the data
+if(!file.exists("./Data")){
+    dir.create("./Data")
+}
+# Download the data
+URL <- "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
+if(!file.exists("./Data/SwiftkeyData.zip")){
+    download.file(URL, destfile = "./Data/SwiftkeyData.zip")
+}
+# Unzip the data
+if(!file.exists("./Data/final")){
+    unzip(zipfile = "./Data/SwiftkeyData.zip", exdir = "./Data")
+}
+dir("./Data/final/en_US")
+
+# Calculate the size of the files
+sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
+sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
+sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
+
+library(readr); library(tm)
+```
+
+There are three files. They respectively hold texts about blogs, news, and tweets.
+The size of the files is quite big. The data of the blogs is `r sizeBlogs` MB.
+The news-data is `r sizeNews` MB. The twitter-data is `r sizeTwitter` MB.
+Because the files are this big, the files are sampled and a new (smaller) datafile is created.
+
+## Creating a sample
+
+To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 15% of the data in the files is included in the sample. These are the first three entries in the sample.
+
+```{r Sampling, cache = TRUE}
+# Set the seed
+set.seed(824039)
+
+# Read in the original data
+twitterData <- readLines("./Data/final/en_US/en_US.twitter.txt", skipNul = T)
+blogData <- readLines("./Data/final/en_US/en_US.blogs.txt", skipNul = T)
+newsData <- read_lines("./Data/final/en_US/en_US.news.txt", skip = 0)
+
+# Create the new file
+sampleData <- c(sample(blogData, round(length(blogData) * 0.15)),
+                sample(newsData, round(length(newsData) * 0.15)),
+                sample(twitterData, round(length(twitterData) * 0.15)))
+head(sampleData, 3)
+writeLines(sampleData, "./Data/sampleData.txt")
+```
+
+
+## Exploratory analysis
+
+First, several characteristics of the original data and the sample are shown. These are the size, the length (how many entries), and the (estimated) total amount of words.
+
+```{r DataCharacteristics, cache = TRUE}
+# Get size of the sample
+sizeSample <- round(file.size("./Data/sampleData.txt")/(10^6), 3)
+
+# Get amount of lines of the data
+lengthBlog <- length(blogData)
+lengthNews <- length(newsData)
+lengthTwitter <- length(twitterData)
+lengthSample <- length(sampleData)
+
+# Get amount of words in data
+blogWords <- sum(sapply(gregexpr("\\w+", blogData), length))
+newsWords <- sum(sapply(gregexpr("\\w+", newsData), length))
+twitterWords <- sum(sapply(gregexpr("\\w+", twitterData), length))
+sampleWords <- sum(sapply(gregexpr("\\w+", sampleData), length))
+
+# Create dataframe with overview of characteristics
+filesOverview <- data.frame(DataSource = c("Blogs", "News", "Twitter", "Sample"),
+                            Size = c(sizeBlogs, sizeNews, sizeTwitter, sizeSample),
+                            Length = c(lengthBlog, lengthNews, lengthTwitter, lengthSample),
+                            Words = c(blogWords, newsWords, twitterWords, sampleWords))
+filesOverview
+```
+
+For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
+All the necessary transformations are made with the tm-package. You can find more about this package [here][5]. The list of stopwords is part of the tm-package.
+
+```{r CleanSample, cache = TRUE, warning=FALSE}
+# Read in profanity list
+profanityList <- read_lines("./Data/profanitylist.txt", skip = 0)
+
+# Create corpus of sample
+corpusDraft <- Corpus(VectorSource(sampleData))
+
+# Clean the corpus
+corpusDraft <- tm_map(corpusDraft, removePunctuation)
+extraPunctuation <- content_transformer(function(x, pattern) {return (gsub(pattern, " ", x))})
+corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€™")
+corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€\u009d")
+corpusDraft <- tm_map(corpusDraft, extraPunctuation, "â€œ")
+corpusDraft <- tm_map(corpusDraft, content_transformer(tolower))
+corpusDraft <- tm_map(corpusDraft, removeNumbers)
+corpusDraft <- tm_map(corpusDraft, removeWords, stopwords("english"))
+corpusDraft <- tm_map(corpusDraft, removeWords, profanityList)
+corpusDraft <- tm_map(corpusDraft, stripWhitespace)
+
+# Save the Corpus
+saveRDS(corpusDraft, file = "./Data/corpusClean.RDS")
+```
+
+
+
+
+
+
+[1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
+[2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
+[3]: https://github.com/kobe04/DataScienceCapstone "here"
+[4]: https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en "available"
+[5]: https://www.rdocumentation.org/packages/tm/versions/0.7-6 "here"
