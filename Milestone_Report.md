@@ -1,5 +1,5 @@
 ---
-title: "Preliminary Milestone Report"
+title: "Milestone Report"
 author: "K. van Splunter"
 date: "April 2019"
 output: 
@@ -48,7 +48,7 @@ sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
 sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
 sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
 
-library(readr); suppressPackageStartupMessages(library(quanteda))
+library(readr); suppressPackageStartupMessages(library(quanteda)); library(ggplot2)
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -78,7 +78,7 @@ First, several characteristics of the original data and the sample are shown. Th
 1      Blogs 210.160  899288 38601602
 2       News 205.812 1010242 35624468
 3    Twitter 167.105 2360148 31105021
-4     Sample  87.332  640451 15783340
+4     Sample  58.166  426968 10513499
 ```
 
 For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
@@ -86,16 +86,30 @@ All the necessary transformations are made with the quanteda-package. You can fi
 
 
 
-To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created.
+To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created. This plot shows the top-50 words in the sample data. It stands out that the words "*said*" and "*just*" appear the most in the data. 
+![](Milestone_Report_files/figure-html/DFM-1.png)<!-- -->
 
-```
-  will   said   just    one   like    can    get   time      s    new 
- 31701  30379  30198  28623  27025  24608  22613  21439  20304  19325 
-   now   good    day   know people   love   back     go    see  first 
- 17979  17730  16646  16425  15771  15751  14162  13926  13786  13555 
-```
+### Bigram
 
-This shows the top-20 words in the sample data.
+This plot shows the top-20 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
+![](Milestone_Report_files/figure-html/bigram-1.png)<!-- -->
+
+### Trigram
+
+The following plot shows the top-20 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
+![](Milestone_Report_files/figure-html/trigram-1.png)<!-- -->
+
+## Interesting Findings
+
+The plots give an impression of the data. In general, they show that there is some further work to be done with cleaning the data. In the first plot, the 'word' "s" appears about 7000 times in the sample.
+The plot of the trigram shows that the combinations "*happy mother's day*" and "*happy mothers day*" are both showing up. However, this should be put in one set.  
+
+Furthermore, right now, the stopwords are removed from the sample, but stopwords are an important part of a language. Therefore, it is worth considering to not exclude these words.
+
+## Next steps
+
+The next step is to create a prediction algorithm. This algorithm should not only be based on the combination of words found in the data, but also take non-appearing combinations into account. This calls for an approach of **smoothing** or **discounting**. 
+
 
 
 

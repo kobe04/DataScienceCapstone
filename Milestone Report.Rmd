@@ -1,5 +1,5 @@
 ---
-title: "Preliminary Milestone Report"
+title: "Milestone Report"
 author: "K. van Splunter"
 date: "April 2019"
 output: 
@@ -43,7 +43,7 @@ sizeBlogs <- round(file.size("./Data/final/en_US/en_US.blogs.txt")/(10^6), 3)
 sizeNews <- round(file.size("./Data/final/en_US/en_US.news.txt")/(10^6), 3)
 sizeTwitter <- round(file.size("./Data/final/en_US/en_US.twitter.txt")/(10^6), 3)
 
-library(readr); suppressPackageStartupMessages(library(quanteda))
+library(readr); suppressPackageStartupMessages(library(quanteda)); library(ggplot2)
 ```
 
 There are three files. They respectively hold texts about blogs, news, and tweets.
@@ -55,7 +55,7 @@ Because the files are this big, the files are sampled and a new (smaller) datafi
 
 To assure that this project is reproducible, the seed is set. Then, the samples are taken and combined into one new file. It is decided that about 10% of the data in the files is included in the sample. These are the first three entries in the sample.
 
-```{r Sampling, cache = TRUE}
+```{r Sampling}
 # Set the seed
 set.seed(824039)
 
@@ -77,7 +77,7 @@ writeLines(sampleData, "./Data/sampleData.txt")
 
 First, several characteristics of the original data and the sample are shown. These are the size, the length (how many entries), and the (estimated) total amount of words.
 
-```{r DataCharacteristics, cache = TRUE}
+```{r DataCharacteristics}
 # Get size of the sample
 sizeSample <- round(file.size("./Data/sampleData.txt")/(10^6), 3)
 
@@ -104,22 +104,77 @@ filesOverview
 For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
 All the necessary transformations are made with the quanteda-package. You can find more about this package [here][5]. The list of stopwords is part of the quanteda-package.
 
-```{r CleanSample, cache = TRUE, warning=FALSE}
+```{r CleanSample}
 # Read in profanity list
 profanityList <- read_lines("./Data/profanitylist.txt", skip = 0)
 
 # Create corpus of sample
+sampleData <- char_tolower(sampleData)
 sampleCorpus <- corpus(sampleData)
 ```
 
-To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created.
+To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created. This plot shows the top-50 words in the sample data. It stands out that the words "*said*" and "*just*" appear the most in the data. 
 ```{r DFM}
-dFM <- dfm(sampleCorpus, remove = c(stopwords("english"), profanityList, "â"), remove_numbers = TRUE,
-           remove_punct = TRUE, remove_separators = TRUE)
-topfeatures(dFM, 20)
+# Create Document-Feature Matrix
+dFM <- dfm(sampleCorpus, remove = c(stopwords("english"), profanityList, "â"),
+           remove_numbers = TRUE, remove_punct = TRUE, remove_separators = TRUE)
+
+# Create plot to display top-50 words
+features_dFM <- textstat_frequency(dFM, n = 50)
+features_dFM$feature <- with(features_dFM, reorder(feature, -frequency))
+g <- ggplot(features_dFM, aes(x = feature, y = frequency))
+g <- g + geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                              panel.background = element_rect(fill = "white"),
+                              panel.grid = element_line(colour = "grey"))
+g
 ```
 
-This shows the top-20 words in the sample data.
+### Bigram
+
+This plot shows the top-20 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
+```{r bigram}
+# Create plot of top-20 bigrams
+tokenized <- tokens_remove(tokens(sampleCorpus, what = "word", remove_numbers = TRUE,
+                                  remove_punct = TRUE, remove_separators = TRUE),
+                           stopwords("english"))
+tokenBi <- tokens_ngrams(tokenized, n = 2)
+dFMBi <- dfm(tokenBi)
+features_dFMBi <- textstat_frequency(dFMBi, n = 20)
+features_dFMBi$feature <- with(features_dFMBi, reorder(feature, -frequency))
+gBi <- ggplot(features_dFMBi, aes(x = feature, y = frequency))
+gBi <- gBi + geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                              panel.background = element_rect(fill = "white"),
+                              panel.grid = element_line(colour = "grey"))
+gBi
+```
+
+### Trigram
+
+The following plot shows the top-20 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
+```{r trigram}
+# Create plot of top-20 trigram
+tokenTri <- tokens_ngrams(tokenized, n = 3)
+dFMTri <- dfm(tokenTri)
+features_dFMTri <- textstat_frequency(dFMTri, n = 20)
+features_dFMTri$feature <- with(features_dFMTri, reorder(feature, -frequency))
+gTri <- ggplot(features_dFMTri, aes(x = feature, y = frequency))
+gTri <- gTri + geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                              panel.background = element_rect(fill = "white"),
+                              panel.grid = element_line(colour = "grey"))
+gTri
+```
+
+## Interesting Findings
+
+The plots give an impression of the data. In general, they show that there is some further work to be done with cleaning the data. In the first plot, the 'word' "s" appears about 17,000 times in the sample.
+The plot of the trigram shows that the combinations "*happy mother's day*" and "*happy mothers day*" are both showing up. However, this should be put in one set.  
+
+Furthermore, right now, the stopwords are removed from the sample, but stopwords are an important part of a language. Therefore, it is worth considering to not exclude these words.
+
+## Next steps
+
+The next step is to create a prediction algorithm. This algorithm should not only be based on the combination of words found in the data, but also take non-appearing combinations into account. This calls for an approach of **smoothing** or **discounting**. 
+
 
 
 
