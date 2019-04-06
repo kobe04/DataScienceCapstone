@@ -8,13 +8,14 @@ output:
 ---
 
 
+
 ## Introduction
 
 This report provides an introduction to the Capstone Project for the Data Science Specialization on [Coursera][1]. The overall goal of the project is to develop a word predictor. It will be deployed as a Shiny app and be accompanied by a Presentation that pitches the app. The project is done in partnership with [SwiftKey][2].
 
 The goal of this report is to provide some exploratory analysis of the data.
 
-To keep this report tidy and short, most of the code is not included. However, the code can easily be found and checked [here][3]!
+To keep this report tidy and short, most of the code is not included.
 
 ## Loading the initial data
 
@@ -91,12 +92,12 @@ To provide some exploratory statistics of the sample data, a Document-Feature Ma
 
 ### Bigram
 
-This plot shows the top-50 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
+This plot shows the top-50 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.  
 ![](Milestone_Report_files/figure-html/bigram-1.png)<!-- -->
 
 ### Trigram
 
-The following plot shows the top-50 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
+The following plot shows the top-50 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.  
 ![](Milestone_Report_files/figure-html/trigram-1.png)<!-- -->
 
 ## Interesting Findings
@@ -115,7 +116,6 @@ it is important to keep the size and runtime of the model in mind, because it ha
 
 [1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
-[3]: https://github.com/kobe04/DataScienceCapstone "here"
 [4]: https://en.wikipedia.org/wiki/Seven_dirty_words "created"
 [5]: https://quanteda.io/index.html "here"
 [6]: https://en.wikipedia.org/wiki/Katz%27s_back-off_model "back-off model"

@@ -7,6 +7,7 @@ output:
     keep_md: yes
 ---
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, comment = "")
 ```
@@ -16,7 +17,7 @@ This report provides an introduction to the Capstone Project for the Data Scienc
 
 The goal of this report is to provide some exploratory analysis of the data.
 
-To keep this report tidy and short, most of the code is not included. However, the code can easily be found and checked [here][3]!
+To keep this report tidy and short, most of the code is not included.
 
 ## Loading the initial data
 
@@ -140,7 +141,7 @@ g
 
 ### Bigram
 
-This plot shows the top-50 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
+This plot shows the top-50 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.  
 ```{r bigram}
 # Tokenize the sampleCorpus
 tokenized <- tokens(sampleCorpus, what = "word", remove_numbers = TRUE, remove_punct = TRUE,
@@ -164,7 +165,7 @@ gBi
 
 ### Trigram
 
-The following plot shows the top-50 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
+The following plot shows the top-50 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.  
 ```{r trigram}
 # Create trigram and DFM
 tokenTri <- tokens_ngrams(tokenized, n = 3)
@@ -196,7 +197,6 @@ it is important to keep the size and runtime of the model in mind, because it ha
 
 [1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
-[3]: https://github.com/kobe04/DataScienceCapstone "here"
 [4]: https://en.wikipedia.org/wiki/Seven_dirty_words "created"
 [5]: https://quanteda.io/index.html "here"
 [6]: https://en.wikipedia.org/wiki/Katz%27s_back-off_model "back-off model"
