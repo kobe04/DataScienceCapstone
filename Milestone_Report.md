@@ -75,46 +75,48 @@ First, several characteristics of the original data and the sample are shown. Th
 
 ```
   DataSource    Size  Length    Words
-1      Blogs 210.160  899288 38601602
+1      Blogs 210.160  899288 38309505
 2       News 205.812 1010242 35624468
-3    Twitter 167.105 2360148 31105021
-4     Sample  58.166  426968 10513499
+3    Twitter 167.105 2360148 31003128
+4     Sample  58.041  426968 10474788
 ```
 
-For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The list of profanity words is [available][4], created by Shutterstock.
+For further analysis, the sample is cleaned. As the first three entries show, there are numbers, punctuation and capital letters. To create a good prediction model, these features need to be removed. Furthermore, the stopwords and several profanity words are also removed. The profanities that are removed, are the *seven words you can never say on television*, a list [created][4] by George Carlin in 1972.
 All the necessary transformations are made with the quanteda-package. You can find more about this package [here][5]. The list of stopwords is part of the quanteda-package.
 
 
 
-To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created. This plot shows the top-50 words in the sample data. It stands out that the words "*said*" and "*just*" appear the most in the data. 
+To provide some exploratory statistics of the sample data, a Document-Feature Matrix is created. This plot shows the top-50 words in the sample data. It stands out that the words *said* and *just* appear the most in the data. 
 ![](Milestone_Report_files/figure-html/DFM-1.png)<!-- -->
 
 ### Bigram
 
-This plot shows the top-20 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
+This plot shows the top-50 bigrams in the sample. the combinations "*right now*" and "*new york*" appear the most in the text.
 ![](Milestone_Report_files/figure-html/bigram-1.png)<!-- -->
 
 ### Trigram
 
-The following plot shows the top-20 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
+The following plot shows the top-50 trigrams in the sample. The combinations "*let us know*" and "*new york city*" appear the most in the sample.
 ![](Milestone_Report_files/figure-html/trigram-1.png)<!-- -->
 
 ## Interesting Findings
 
-The plots give an impression of the data. In general, they show that there is some further work to be done with cleaning the data. In the first plot, the 'word' "s" appears about 7000 times in the sample.
+The plots give an impression of the data. In general, they show that there is some further work to be done with cleaning the data. In the first plot, the 'word' "*rt*" appears about 7,000 times in the sample. However, the question rises to what extent this is actually a word.
 The plot of the trigram shows that the combinations "*happy mother's day*" and "*happy mothers day*" are both showing up. However, this should be put in one set.  
 
 Furthermore, right now, the stopwords are removed from the sample, but stopwords are an important part of a language. Therefore, it is worth considering to not exclude these words.
 
 ## Next steps
 
-The next step is to create a prediction algorithm. This algorithm should not only be based on the combination of words found in the data, but also take non-appearing combinations into account. This calls for an approach of **smoothing** or **discounting**. 
-
+The next step is to create a prediction algorithm. This algorithm should not only be based on the combination of words found in the data, but also take non-appearing combinations into account. This calls for an approach of **smoothing** or **discounting**. One way to do this is by using a [back-off model][6].  
+it is important to keep the size and runtime of the model in mind, because it has to be deployed on the [shinyapps][7] server. This means that it cannot be more than 1 Gb of RAM.
 
 
 
 [1]: https://www.coursera.org/specializations/jhu-data-science "Coursera"
 [2]: https://www.microsoft.com/en-us/swiftkey?rtc=1&activetab=pivot_1%3aprimaryr2 "SwiftKey"
 [3]: https://github.com/kobe04/DataScienceCapstone "here"
-[4]: https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en "available"
+[4]: https://en.wikipedia.org/wiki/Seven_dirty_words "created"
 [5]: https://quanteda.io/index.html "here"
+[6]: https://en.wikipedia.org/wiki/Katz%27s_back-off_model "back-off model"
+[7]: https://www.shinyapps.io/ "shinyapps"
