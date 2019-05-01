@@ -1,0 +1,32 @@
+---
+title: "Manual"
+author: "K. van Splunter"
+date: "April 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This app is designed as part of the Capstone Project for the Data Science Specialization of the John's Hopkins University on Coursera.  
+The goal of this Project is to develop a web-based app that is able to predict the next word when given a textual input.
+The second part of the Project is a short pitch presentation. This presentation contains some more info about the used algorithm of the app and can be found [here][1]. The complete code of the algorithm and construction of the dataset can be found in [this][2] GitHub repository.
+
+## The app
+
+The app takes an input of the user on the left hand side of the screen. In the text-box, the user is prompted to enter one or more words. After you have entered the word or phrase you want to enter, you have to press the **Done** button. The app, then, takes this input and returns a maximum of three options for the next word.  
+The first choice is the word with the highest predicted value, the second choice is the word with the second highest predicted value, and the third choice is the word with the third highest predicted value.  
+If the app returns only two words, then, the third option will display **NA**. If there is only one word that is returned, then both the second and third option will display **NA**.  
+It is not possible that all three options show **NA**. If the algorithm does not find a match in the database, then it will randomly return a word that is in the top-10 most appearances in the dataset.
+Even though you can enter every character you want, and use every word you want, the dataset is optimized for use with the English language and does not contain the **profanities** as described by George Carlin in [1972][3]. Furthermore, the dataset does not contain numbers.
+
+
+
+
+
+[1]: http://rpubs.com/Kobe04/492172 "here"
+[2]: https://github.com/kobe04/DataScienceCapstone "this"
+[3]: https://en.wikipedia.org/wiki/Seven_dirty_words "1972"

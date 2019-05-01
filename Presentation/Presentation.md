@@ -1,0 +1,57 @@
+---
+title: "Predicting the next word"
+author: "K. van Splunter"
+date: "April 2019"
+output:
+  ioslides_presentation: 
+    css: styles.css
+    keep_md: yes
+    logo: jhuLogo.png
+---
+
+
+
+## Introduction
+
+This presentation is designed as part of the Capstone Project for the Data Science Specialization of the John's Hopkins University on Coursera.  
+The goal of this Project is to develop a web-based app that is able to predict the next word when given a textual input.  
+The complete code for the project can be found [here][1]. The app itself is accessible through [this][2] link.
+
+## Preparing the data {.smaller}
+The data that's been used were provided in the Capstone Project. A short overview of the data is given:
+
+```
+  DataSource    Size  Length     Words
+1      Blogs 210.160  899288  38309505
+2       News 205.812 1010242  35624468
+3    Twitter 167.105 2360148  31003128
+4      Total 581.485 4269678 104937101
+```
+
+The size of the complete data is 581.485 MB. The app is built with 100% of the data. Several steps were necessary to use the data in the algorithm:  
+1. Cleaning the data  
+2. Creating [n-grams][3]  
+3. Selecting source and prediction for each entry  
+4. Calculating the frequency of source  
+5. Dropping the entries with a frequency of 1  
+6. Selecting top-3 predictions for each source  
+
+## Algorithm
+The algorithm that is being used in the app is a **backoff model**. This means that the algorithm takes the <span class="red"> **n** </span> last words of the input and checks the reference table for a match. If a match is found, then the predicted word is returned. If a match is not found, the algorithm takes <span class="red"> **n-1** </span> words and checks the reference table again.  
+This process repeats itself, until the algorithm does not find a match for the length <span class="red"> **n = 1** </span>.
+If the algorithm does not find a match, one of the **top-10** most appearing words is returned.
+
+The reference-table contains 2-5 grams and the ten most appearing unigrams. The algorithm will select the last 4 words of the entered text.
+
+## Application {.smaller}
+![](/Coursera/Data Science/Capstone/DataScienceCapstone/Presentation/appOverview2.png)
+
+Enter your text on the left-hand side of the app. Hit the **Done** button and see the predictions on the right-hand side of the app.
+
+
+
+
+
+[1]: https://github.com/kobe04/DataScienceCapstone "here"
+[2]: https://kobe04.shinyapps.io/wordpredictor/ "this"
+[3]: https://en.wikipedia.org/wiki/N-gram "n-grams"

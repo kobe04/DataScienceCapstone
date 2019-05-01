@@ -1,0 +1,13 @@
+.gdbar img {
+    width: 200px !important;
+    height: 75px !important;
+}
+
+slides > slide:not(.nobackground):before {
+    position: absolute;
+    bottom: 15px;
+    left: 660px;
+    width: 200px;
+    height: 75px;
+    background-size: 200px 75px;
+}
